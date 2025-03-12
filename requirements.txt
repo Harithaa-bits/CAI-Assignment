@@ -1,0 +1,14 @@
+faiss-cpu
+sentence-transformers
+rank_bm25
+flask
+streamlit
+pymupdf
+pyngrok
+nltk
+openai
+chromadb
+fastapi
+uvicorn
+transformers
+torch
