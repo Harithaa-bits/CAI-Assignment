@@ -8,7 +8,10 @@ import faiss
 import numpy as np
 import nltk
 
+# Download necessary NLTK models
+nltk.download("punkt")
 nltk.download("stopwords")
+
 stop_words = set(stopwords.words("english"))
 
 # Load financial data
