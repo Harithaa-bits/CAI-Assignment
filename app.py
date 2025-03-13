@@ -1,5 +1,6 @@
 import os
 import urllib.request
+import zipfile
 import streamlit as st
 import nltk
 from nltk.tokenize import word_tokenize, sent_tokenize
@@ -9,19 +10,36 @@ import numpy as np
 import faiss
 from sentence_transformers import SentenceTransformer
 
-# Download required NLTK resources
-nltk.download("stopwords")
-nltk.download("punkt")
+# Paths and URLs
+NLTK_ZIP_URL = "https://raw.githubusercontent.com/Harithaa-bits/CAI-Assignment/main/nltk_data_min.zip"
+NLTK_ZIP_PATH = "nltk_data_min.zip"
+NLTK_DIR = "nltk_data"
+FAISS_INDEX_URL = "https://raw.githubusercontent.com/Harithaa-bits/CAI-Assignment/main/faiss_index"
+FAISS_INDEX_PATH = "faiss_index"
+
+# Ensure NLTK data is downloaded and extracted
+if not os.path.exists(NLTK_DIR):
+    st.write("Downloading and extracting NLTK data...")
+    urllib.request.urlretrieve(NLTK_ZIP_URL, NLTK_ZIP_PATH)
+    
+    with zipfile.ZipFile(NLTK_ZIP_PATH, "r") as zip_ref:
+        zip_ref.extractall(".")
+    
+    os.remove(NLTK_ZIP_PATH)
+
+# Set NLTK data path
+nltk.data.path.append(NLTK_DIR)
+
+# Load required NLTK resources
+nltk.download("stopwords", download_dir=NLTK_DIR)
+nltk.download("punkt", download_dir=NLTK_DIR)
 
 stop_words = set(stopwords.words("english"))
 
 FINANCIAL_KEYWORDS = ["revenue", "profit", "net income", "cash flow", "earnings", "financial report",
                       "balance sheet", "liabilities", "gross margin", "operating income", "expenses", "equity"]
 
-FAISS_INDEX_URL = "https://raw.githubusercontent.com/Harithaa-bits/CAI-Assignment/main/faiss_index"
-FAISS_INDEX_PATH = "faiss_index"
-
-# Step 1: Ensure FAISS index is downloaded
+# Ensure FAISS index is downloaded
 if not os.path.exists(FAISS_INDEX_PATH):
     st.write("Downloading FAISS index from GitHub...")
     urllib.request.urlretrieve(FAISS_INDEX_URL, FAISS_INDEX_PATH)
